@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "organizer"
+version = "0.1.0"
+description = ""
+authors = ["ShuminHome <shuminfu99@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+tkinterdnd2 = "^0.4.2"
+nuitka = "^2.5.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
