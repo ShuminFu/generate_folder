@@ -17,7 +17,7 @@ class FilePathApp:
         style.configure("TButton", font=("Helvetica", 12))
         style.configure("TRadiobutton", font=("Helvetica", 12), background="#f0f0f0")
 
-        self.label = ttk.Label(master, text="请拖动文件到此处")
+        self.label = ttk.Label(master, text="请拖动文件或文件夹到此处")
         self.label.pack(pady=10)
 
         self.entry = ttk.Entry(master, width=50)
@@ -51,27 +51,57 @@ class FilePathApp:
         self.master.drop_target_register(DND_FILES)
         self.master.dnd_bind('<<Drop>>', self.drop)
 
-    def drop(self, event):
-        file_path = event.data
-        self.entry.delete(0, tk.END)
-        self.entry.insert(0, file_path)
-        self.update_target_dir(file_path)
+    def update_target_dir(self, paths):
+        if isinstance(paths, str):
+            paths = [paths]
 
-    def update_target_dir(self, file_path):
-        if os.path.isfile(file_path):
-            dir_name, file_name = os.path.split(file_path)
-            base_name = file_name.rsplit('_', 1)[0]
-            target_dir = os.path.join(dir_name, base_name)
-            self.target_label.config(text=f"目标目录: {target_dir}")
+        # 使用集合来存储唯一的目标目录
+        target_dirs = set()
+
+        for path in paths:
+            if os.path.exists(path):
+                if os.path.isfile(path):
+                    dir_name, file_name = os.path.split(path)
+                    base_name = file_name.rsplit('_', 1)[0]
+                    target_dir = os.path.join(dir_name, base_name)
+                else:  # 文件夹情况
+                    target_dir = path + "_processed"
+                target_dirs.add(target_dir)
+
+        if target_dirs:
+            # 将集合转换为排序列表以保持显示顺序一致
+            sorted_dirs = sorted(target_dirs)
+            target_text = "目标目录:\n" + "\n".join(f"- {dir}" for dir in sorted_dirs)
+            self.target_label.config(text=target_text)
         else:
-            self.target_label.config(text="无效的文件路径")
+            self.target_label.config(text="无效的路径")
+
+    def drop(self, event):
+        paths = event.data.split()  # 分割多个文件路径
+        # 移除可能的花括号并处理每个路径
+        paths = [path.strip('{}') for path in paths]
+
+        # 将所有路径以分号分隔显示在输入框中
+        self.entry.delete(0, tk.END)
+        self.entry.insert(0, ';'.join(paths))
+
+        # 更新所有文件的目标目录显示
+        self.update_target_dir(paths)
 
     def process_files(self):
-        file_path = self.entry.get()
-        if not os.path.isfile(file_path):
-            self.log_message("无效的文件路径")
-            return
+        paths = self.entry.get().split(';')
+        for path in paths:
+            path = path.strip('{}')
+            if not os.path.exists(path):
+                self.log_message(f"无效的路径: {path}")
+                continue
 
+            if os.path.isfile(path):
+                self.process_single_file(path)
+            else:
+                self.process_directory(path)
+
+    def process_single_file(self, file_path):
         dir_name, file_name = os.path.split(file_path)
         base_name = file_name.rsplit('_', 1)[0]
         target_dir = os.path.join(dir_name, base_name)
@@ -79,19 +109,41 @@ class FilePathApp:
         if not os.path.exists(target_dir):
             os.makedirs(target_dir)
 
-        for item in os.listdir(dir_name):
-            source_path = os.path.join(dir_name, item)
-            if item.startswith(base_name) and os.path.isfile(source_path):
+        self.process_files_with_prefix(dir_name, base_name, target_dir)
+
+    def process_directory(self, dir_path):
+        # 创建处理后的目标目录
+        target_base_dir = dir_path + "_processed"
+        if not os.path.exists(target_base_dir):
+            os.makedirs(target_base_dir)
+
+        # 获取目录中所有文件的前缀集合
+        prefixes = set()
+        for file_name in os.listdir(dir_path):
+            if os.path.isfile(os.path.join(dir_path, file_name)):
+                prefix = file_name.rsplit('_', 1)[0]
+                prefixes.add(prefix)
+
+        # 处理每个前缀的文件
+        for prefix in prefixes:
+            target_dir = os.path.join(target_base_dir, prefix)
+            if not os.path.exists(target_dir):
+                os.makedirs(target_dir)
+            self.process_files_with_prefix(dir_path, prefix, target_dir)
+
+    def process_files_with_prefix(self, source_dir, prefix, target_dir):
+        for item in os.listdir(source_dir):
+            source_path = os.path.join(source_dir, item)
+            if item.startswith(prefix) and os.path.isfile(source_path):
                 target_path = os.path.join(target_dir, item)
                 if not os.path.exists(target_path):
                     if self.operation_var.get() == "copy":
                         shutil.copy(source_path, target_dir)
                     else:
                         shutil.move(source_path, target_dir)
+                    self.log_message(f"已{'复制' if self.operation_var.get() == 'copy' else '剪切'}: {item}")
                 else:
-                    self.log_message(f"文件 {target_path} 已存在，跳过。")
-
-        self.log_message(f"文件已{'复制' if self.operation_var.get() == 'copy' else '剪切'}到 {target_dir}")
+                    self.log_message(f"文件 {item} 已存在，跳过。")
 
     def log_message(self, message):
         self.text_area.insert(tk.END, message + "\n")
