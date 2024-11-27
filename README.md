@@ -11,7 +11,7 @@
 4. Microsoft Store 安装的 Python 包含标准包管理器 pip。Pip 允许您安装和管理不属于 Python 标准库的附加包。要确认您也可以使用 pip 安装和管理包，请输入 `pip --version`。
 
 # 手动获取代码
-![img.png](img.png)
+![images/img.png](images/img.png)
 下载完代码之后进入到代码目录下，打开命令行工具PowerShell/ CMD，输入以下命令升级pip
 ```shell
 pip install --upgrade pip
@@ -24,7 +24,7 @@ pip install tkinterdnd2 -i https://mirrors.cloud.tencent.com/pypi/simple
 
 # 运行代码
 在代码目录下打开命令行工具PowerShell / CMD
-![img_1.png](img_1.png)
+![images/img_1.png](images/img_1.png)
 
 输入以下命令运行代码
 ```shell
@@ -33,5 +33,5 @@ python cleanup.py
 
 # Pyinstaller 打包
 ```shell
-pyinstaller -F -w cleanup.py --additional-hooks-dir=. 
+pyinstaller cleanup.spec
 ```

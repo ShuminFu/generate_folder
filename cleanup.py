@@ -3,7 +3,7 @@ import shutil
 import tkinter as tk
 from tkinter import ttk
 from tkinterdnd2 import DND_FILES, TkinterDnD
-
+import _tkinter
 
 class FilePathApp:
     def __init__(self, master):
