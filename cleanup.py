@@ -8,7 +8,7 @@ from tkinterdnd2 import DND_FILES, TkinterDnD
 class FilePathApp:
     def __init__(self, master):
         self.master = master
-        self.master.title("拖动文件获取路径")
+        self.master.title("funfun app")
         self.master.geometry("500x400")
         self.master.configure(bg="#f0f0f0")
 
