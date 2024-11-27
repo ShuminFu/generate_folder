@@ -12,7 +12,7 @@
 
 # 手动获取代码
 ![img.png](img.png)
-下载完代码之后进入到代码目录下，打开命令行工具PowerShell，输入以下命令升级pip
+下载完代码之后进入到代码目录下，打开命令行工具PowerShell/ CMD，输入以下命令升级pip
 ```shell
 pip install --upgrade pip
 ```
@@ -23,7 +23,10 @@ pip install tkinterdnd2 -i https://mirrors.cloud.tencent.com/pypi/simple
 ```
 
 # 运行代码
-在代码目录下打开命令行工具PowerShell，输入以下命令运行代码
+在代码目录下打开命令行工具PowerShell / CMD
+![img_1.png](img_1.png)
+
+输入以下命令运行代码
 ```shell
 python cleanup.py
 ```
