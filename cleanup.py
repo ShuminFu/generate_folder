@@ -17,7 +17,7 @@ class FilePathApp:
         style.configure("TButton", font=("Helvetica", 12))
         style.configure("TRadiobutton", font=("Helvetica", 12), background="#f0f0f0")
 
-        self.label = ttk.Label(master, text="请拖动文件或文件夹到此处")
+        self.label = ttk.Label(master, text="拖它到这儿来")
         self.label.pack(pady=10)
 
         self.entry = ttk.Entry(master, width=50)
@@ -25,13 +25,13 @@ class FilePathApp:
 
         self.operation_var = tk.StringVar(value="copy")
 
-        self.copy_radio = ttk.Radiobutton(master, text="复制文件", variable=self.operation_var, value="copy")
+        self.copy_radio = ttk.Radiobutton(master, text="用复制的方式来处理", variable=self.operation_var, value="copy")
         self.copy_radio.pack(pady=5)
 
-        self.move_radio = ttk.Radiobutton(master, text="剪切文件", variable=self.operation_var, value="move")
+        self.move_radio = ttk.Radiobutton(master, text="用剪切的方式来处理", variable=self.operation_var, value="move")
         self.move_radio.pack(pady=5)
 
-        self.start_button = ttk.Button(master, text="开始", command=self.process_files)
+        self.start_button = ttk.Button(master, text="原神启动", command=self.process_files)
         self.start_button.pack(pady=10)
 
         self.target_label = ttk.Label(master, text="")
@@ -71,7 +71,7 @@ class FilePathApp:
         if target_dirs:
             # 将集合转换为排序列表以保持显示顺序一致
             sorted_dirs = sorted(target_dirs)
-            target_text = "目标目录:\n" + "\n".join(f"- {dir}" for dir in sorted_dirs)
+            target_text = "文件去哪儿啦:\n" + "\n".join(f"- {dir}" for dir in sorted_dirs)
             self.target_label.config(text=target_text)
         else:
             self.target_label.config(text="无效的路径")
