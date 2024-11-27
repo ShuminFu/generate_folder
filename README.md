@@ -12,7 +12,12 @@
 
 # 手动获取代码
 ![img.png](img.png)
-下载完代码之后进入到代码目录下，打开命令行工具PowerShell，输入以下命令安装依赖包
+下载完代码之后进入到代码目录下，打开命令行工具PowerShell，输入以下命令升级pip
+```shell
+pip install --upgrade pip
+```
+
+输入以下命令安装依赖包
 ```shell
 pip install tkinterdnd2 -i https://mirrors.cloud.tencent.com/pypi/simple
 ```
