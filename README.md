@@ -30,3 +30,8 @@ pip install tkinterdnd2 -i https://mirrors.cloud.tencent.com/pypi/simple
 ```shell
 python cleanup.py
 ```
+
+# Pyinstaller 打包
+```shell
+pyinstaller -F -w cleanup.py --additional-hooks-dir=. 
+```

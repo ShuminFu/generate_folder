@@ -6,10 +6,9 @@ authors = ["ShuminHome <shuminfu99@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.12, <3.14"
 tkinterdnd2 = "^0.4.2"
-nuitka = "^2.5.4"
-
+pyinstaller = "6.11.1"
 
 [build-system]
 requires = ["poetry-core"]
